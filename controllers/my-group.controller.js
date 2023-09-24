@@ -1,26 +1,11 @@
-const express = require("express");
-const PORT = 5000;
-const app = express();
-
 const {mygroup} = require('./models/my-group.model');
 
-
-app.use(express.json());
-
-// const getAllRoute = require('./routes/routes')
-
-// app.use(getAllRoute)
-
-
-
-
-app.get('/', (req, res)=>{
+function getAll (req, res) {
     console.log(`[GET]: http://localhost:5000/`);
     res.status(200).json(mygroup);
-})
+}
 
-app.post('/:MSSV/:id', (req, res)=>{
-    
+function addOne(req, res){
     const mssv = Number(req.params.MSSV);
     const ID = Number(req.params.id)
     console.log(`[POST]: http://localhost:5000/${mssv}/${ID}`);
@@ -40,10 +25,8 @@ app.post('/:MSSV/:id', (req, res)=>{
     const newGroupMember = {id: mssv, name: req.body.name}
     mygroup.push(newGroupMember)
     res.status(200).json(newGroupMember);
-})
-
-app.get('/:id', (req, res)=>{
-    
+}
+function getById(req, res){
     const ID = Number(req.params.id)
     console.log(`[GET]: http://localhost:5000/${ID}`);
     if(ID >= 0 && ID < mygroup.length){
@@ -54,10 +37,8 @@ app.get('/:id', (req, res)=>{
     }else {
         res.status(400).json({error:'Not valid'});
     }
-})
-
-app.get('/message/:id', (req, res)=>{
-    
+}
+function getMessageById(req, res){
     const ID = Number(req.params.id)
     console.log(`[GET]: http://localhost:5000/message/${ID}`);
     if(!ID){
@@ -74,8 +55,12 @@ app.get('/message/:id', (req, res)=>{
     }else {
         res.status(400).json({error:'Not valid'});
     }
-   
-})
-app.listen(PORT, ()=>{
-    console.log(`Server is running on port ${PORT}`);
-});
+}
+
+
+module.exports = {
+   getAll, 
+   addOne,
+   getById, 
+   getMessageById
+}
